@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-app
+  namespace: project-1      # 👈 tu jo namespace banaya hai
+  labels:
+    app: ngi
+spec:
+  replicas: 2               # kitne pods chahiye
+  selector:
+    matchLabels:
+      app: ngi             # ye selector niche template ke label se match karega
+  template:
+    metadata:
+      labels:
+        app: ngi
+    spec:
+      containers:
+      - name: nginx-container
+        image: nginx:latest   # 🟢 apna docker image
+        ports:
+        - containerPort: 80               # jo app use karta hai
+
+
