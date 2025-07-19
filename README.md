@@ -1,58 +1,72 @@
-# 🧩 Kubernetes React + TODO App with NGINX and Ingress
+# 🧩 Kubernetes Deployment: React TODO App + NGINX with Ingress on AWS EC2
 
-This project deploys two frontend apps (`nginx` + `todo`) using **React** and **Vite**, containerized with **Docker**, and deployed to **Kubernetes** on **AWS EC2** using **Ingress-NGINX** for routing.
-
----
-
-## 📁 Folder Structure
-
-
-
-├── config.yaml # Ingress NGINX Controller Helm config
-├── ingress.yaml # Ingress rule for both apps
-├── namespace.yaml # Creates project-1 namespace
-├── nginx-deployment.yaml # React frontend (nginx served) deployment
-├── nginx-service.yaml # Service for frontend app
-├── todo-deployment.yaml # TODO app deployment
-├── todo-service.yaml # Service for todo app
-
-
+This project demonstrates how to deploy **two frontend apps** built with **React + Vite** (one served via NGINX, one as a TODO app) using **Docker**, **Kubernetes**, and **Ingress-NGINX** on an **AWS EC2** instance.
 
 ---
 
-## 🚀 Deployment Steps
+## 🧱 Project Files
 
-### 1️⃣ Create Namespace
+| File | Description |
+|------|-------------|
+| `namespace.yaml` | Creates `project-1` namespace |
+| `nginx-deployment.yaml` | Deployment for NGINX-hosted React app |
+| `nginx-service.yaml` | Service for NGINX app |
+| `todo-deployment.yaml` | Deployment for TODO React app |
+| `todo-service.yaml` | Service for TODO app |
+| `ingress.yaml` | Ingress rules for both apps |
+| `config.yaml` | Helm config for Ingress-NGINX controller |
+
+---
+
+## 🚀 Step-by-Step Deployment Guide
+
+### ✅ 1. Clone the Repository
+
 ```bash
+git clone https://github.com/<your-username>/<your-repo-name>.git
+cd <your-repo-name>
+
+
+🛠️ 2. Create Kubernetes Namespace
+
 kubectl apply -f namespace.yaml
 
 
-kubectl apply -f nginx-deployment.yaml -n project-1
-kubectl apply -f nginx-service.yaml -n project-1
+📦 3. Deploy Both Applications
 
+
+# Deploy TODO app
 kubectl apply -f todo-deployment.yaml -n project-1
 kubectl apply -f todo-service.yaml -n project-1
 
+# Deploy NGINX-hosted app
+kubectl apply -f nginx-deployment.yaml -n project-1
+kubectl apply -f nginx-service.yaml -n project-1
 
 
-helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-helm install ingress-nginx ingress-nginx/ingress-nginx -f config.yaml -n ingress-nginx --create-namespace
+🌐 4. Install Ingress 
 
+kubectl apply -f https://kind.sigs.k8s.io/examples/ingress/deploy-ingress-nginx.yaml
+
+
+
+🔀 5. Apply Ingress Rules
 
 kubectl apply -f ingress.yaml
 
 
 
-🚪 Ingress Port Forwarding for EC2 Access
-To access your app via Ingress NGINX from your EC2 instance's public IP, use the following command:
+🚪 Ingress Port Forwarding (for EC2 Access)
+Use this command to forward EC2's port 8080 to Kubernetes ingress port 80:
 
 
 sudo -E kubectl port-forward service/ingress-nginx-controller -n ingress-nginx 8080:80 --address=0.0.0.0
 
 
-🌐 Now Access Your App:
-Open this in your browser:
 
 
-http://<your-ec2-public-ip>:8080/todo      for accessing todo-app
-http://<your-ec2-public-ip>:8080/nginx      for accessing nginx-app
+🌍 Access Your Apps in Browser
+
+
+TODO App	http://<your-ec2-public-ip>:8080/todo
+NGINX App	http://<your-ec2-public-ip>:8080/nginx
