@@ -50,7 +50,7 @@ kubectl apply -f https://kind.sigs.k8s.io/examples/ingress/deploy-ingress-nginx.
 
 
 
-🔀 5. Apply Ingress Rules
+🔀 5. Apply Ingress File
 
 kubectl apply -f ingress.yaml
 
